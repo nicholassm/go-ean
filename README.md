@@ -13,10 +13,7 @@ To calculate a checksum use the `ChecksumEan8` or `ChecksumEan13` functions:
 
     package main
 
-    import (
-      "fmt"
-      "github.com/nicholassm/go-ean/ean"
-    )
+    import "github.com/nicholassm/go-ean/ean"
 
     func main() {
       c, err := ean.ChecksumEan13("629104150021")
