@@ -5,7 +5,7 @@ go-ean is a simple utility library for calculating EAN checksums and validating 
 
 ## Installation
 
-    go get github.com/nicholassm/go-ean
+    go get github.com/nicholassm/go-ean/ean
 
 ## Usage
 
@@ -15,7 +15,7 @@ To calculate a checksum use the `ChecksumEan8` or `ChecksumEan13` functions:
 
     import (
       "fmt"
-      "github.com/nicholassm/go-ean"
+      "github.com/nicholassm/go-ean/ean"
     )
 
     func main() {
