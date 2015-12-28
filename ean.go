@@ -1,8 +1,9 @@
 package ean
 
-import "errors"
-import "fmt"
-import "strconv"
+import (
+	"fmt"
+	"strconv"
+)
 
 func Valid(ean string) bool {
 	return ValidEan8(ean) || ValidEan13(ean)
@@ -30,7 +31,7 @@ func ValidEan13(ean string) bool {
 
 func ChecksumEan8(ean string) (int, error) {
 	if len(ean) < 7 {
-		return -1, errors.New(fmt.Sprintf("Ean %v is too short to compute a checksum.", ean))
+		return -1, fmt.Errorf("Ean %v is too short to compute a checksum.", ean)
 	}
 
 	return checksum(ean[:7], true)
@@ -38,7 +39,7 @@ func ChecksumEan8(ean string) (int, error) {
 
 func ChecksumEan13(ean string) (int, error) {
 	if len(ean) < 12 {
-		return -1, errors.New(fmt.Sprintf("Ean %v is too short to compute a checksum.", ean))
+		return -1, fmt.Errorf("Ean %v is too short to compute a checksum.", ean)
 	}
 
 	return checksum(ean[:12], false)
@@ -51,7 +52,7 @@ func checksum(ean string, multiplyWhenEven bool) (int, error) {
 		value, err := strconv.Atoi(string(v))
 
 		if err != nil {
-			return -1, errors.New(fmt.Sprintf("Contains non-digit: %q.", v))
+			return -1, fmt.Errorf("Contains non-digit: %q.", v)
 		}
 
 		if (i%2 == 0) == multiplyWhenEven {
