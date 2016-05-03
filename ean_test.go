@@ -20,10 +20,19 @@ func TestValid(t *testing.T) {
 }
 
 func TestChecksumEan8(t *testing.T) {
-	assertChecksum(t, ChecksumEan8, "0", -1, errors.New("incorrect ean 0 to compute a checksum"))
-	assertChecksum(t, ChecksumEan8, "0x111111", -1, errors.New("contains non-digit: 'x'"))
-	assertChecksum(t, ChecksumEan8, "96385074", 4, nil) // Wikipedia EAN-8 example
-	assertChecksum(t, ChecksumEan8, "73513537", 7, nil)
+	tests := []struct {
+		ean      string
+		expected int
+		err      error
+	}{
+		{"0", -1, errors.New("incorrect ean 0 to compute a checksum")},
+		{"0x111111", -1, errors.New("contains non-digit: 'x'")},
+		{"96385074", 4, nil}, // Wikipedia EAN-8 example
+		{"73513537", 7, nil},
+	}
+	for _, v := range tests {
+		assertChecksum(t, ChecksumEan8, v.ean, v.expected, v.err)
+	}
 }
 
 func assertChecksum(t *testing.T, f func(string) (int, error), ean string, expectedChecksum int, err error) {
@@ -39,15 +48,24 @@ func assertChecksum(t *testing.T, f func(string) (int, error), ean string, expec
 }
 
 func TestChecksumEan13(t *testing.T) {
-	assertChecksum(t, ChecksumEan13, "0", -1, errors.New("incorrect ean 0 to compute a checksum"))
-	assertChecksum(t, ChecksumEan13, "00000000000000", -1, errors.New("incorrect ean 00000000000000 to compute a checksum"))
-	assertChecksum(t, ChecksumEan13, "0x11111111111", -1, errors.New("contains non-digit: 'x'"))
-	assertChecksum(t, ChecksumEan13, "9781934356739", 9, nil)
-	assertChecksum(t, ChecksumEan13, "1111111111116", 6, nil)
-	assertChecksum(t, ChecksumEan13, "6291041500213", 3, nil) // GS1 example.
-	assertChecksum(t, ChecksumEan13, "9780306406157", 7, nil) // Wikipedia ISBN-13 example
-	assertChecksum(t, ChecksumEan13, "5711489018800", 0, nil)
-	assertChecksum(t, ChecksumEan13, "5711489018824", 4, nil)
+	tests := []struct {
+		ean      string
+		expected int
+		err      error
+	}{
+		{"0", -1, errors.New("incorrect ean 0 to compute a checksum")},
+		{"00000000000000", -1, errors.New("incorrect ean 00000000000000 to compute a checksum")},
+		{"0x11111111111", -1, errors.New("contains non-digit: 'x'")},
+		{"9781934356739", 9, nil},
+		{"1111111111116", 6, nil},
+		{"6291041500213", 3, nil}, // GS1 example.
+		{"9780306406157", 7, nil}, // Wikipedia ISBN-13 example
+		{"5711489018800", 0, nil},
+		{"5711489018824", 4, nil},
+	}
+	for _, v := range tests {
+		assertChecksum(t, ChecksumEan13, v.ean, v.expected, v.err)
+	}
 }
 
 func TestChecksumUPC(t *testing.T) {
