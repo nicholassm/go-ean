@@ -6,53 +6,54 @@ import (
 )
 
 func Valid(ean string) bool {
-	return ValidEan8(ean) || ValidEan13(ean)
+	return ValidEan8(ean) || ValidEan13(ean) || ValidUpc(ean)
+}
+
+func ValidUpc(upc string) bool {
+	return validCode(upc, 12)
+
 }
 
 func ValidEan8(ean string) bool {
-	if len(ean) != 8 {
-		return false
-	}
-
-	checksum, err := ChecksumEan8(ean)
-
-	return err == nil && strconv.Itoa(checksum) == ean[7:8]
+	return validCode(ean, 8)
 }
 
 func ValidEan13(ean string) bool {
-	if len(ean) != 13 {
-		return false
-	}
+	return validCode(ean, 13)
+}
 
-	checksum, err := ChecksumEan13(ean)
+func validCode(ean string, size int) bool {
+	checksum, err := checksum(ean, size)
 
-	return err == nil && strconv.Itoa(checksum) == ean[12:13]
+	return err == nil && strconv.Itoa(checksum) == ean[size-1:size]
 }
 
 func ChecksumEan8(ean string) (int, error) {
-	if len(ean) < 7 {
-		return -1, fmt.Errorf("Ean %v is too short to compute a checksum.", ean)
-	}
-
-	return checksum(ean[:7], true)
+	return checksum(ean, 8)
 }
 
 func ChecksumEan13(ean string) (int, error) {
-	if len(ean) < 12 {
-		return -1, fmt.Errorf("Ean %v is too short to compute a checksum.", ean)
-	}
-
-	return checksum(ean[:12], false)
+	return checksum(ean, 13)
 }
 
-func checksum(ean string, multiplyWhenEven bool) (int, error) {
+func ChecksumUpc(upc string) (int, error) {
+	return checksum(upc, 12)
+}
+
+func checksum(ean string, size int) (int, error) {
+	if len(ean) != size {
+		return -1, fmt.Errorf("incorrect ean %v to compute a checksum", ean)
+	}
+
+	code := ean[:size-1]
+	multiplyWhenEven := size%2 == 0
 	sum := 0
 
-	for i, v := range ean {
+	for i, v := range code {
 		value, err := strconv.Atoi(string(v))
 
 		if err != nil {
-			return -1, fmt.Errorf("Contains non-digit: %q.", v)
+			return -1, fmt.Errorf("contains non-digit: %q", v)
 		}
 
 		if (i%2 == 0) == multiplyWhenEven {
