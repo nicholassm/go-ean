@@ -20,7 +20,7 @@ func TestValid(t *testing.T) {
 }
 
 func TestChecksumEan8(t *testing.T) {
-	assertChecksum(t, ChecksumEan8, "0", -1, errors.New("ean 0 is too short to compute a checksum"))
+	assertChecksum(t, ChecksumEan8, "0", -1, errors.New("incorrect ean 0 to compute a checksum"))
 	assertChecksum(t, ChecksumEan8, "0x111111", -1, errors.New("contains non-digit: 'x'"))
 	assertChecksum(t, ChecksumEan8, "96385074", 4, nil) // Wikipedia EAN-8 example
 	assertChecksum(t, ChecksumEan8, "73513537", 7, nil)
@@ -39,7 +39,8 @@ func assertChecksum(t *testing.T, f func(string) (int, error), ean string, expec
 }
 
 func TestChecksumEan13(t *testing.T) {
-	assertChecksum(t, ChecksumEan13, "0", -1, errors.New("ean 0 is too short to compute a checksum"))
+	assertChecksum(t, ChecksumEan13, "0", -1, errors.New("incorrect ean 0 to compute a checksum"))
+	assertChecksum(t, ChecksumEan13, "00000000000000", -1, errors.New("incorrect ean 00000000000000 to compute a checksum"))
 	assertChecksum(t, ChecksumEan13, "0x11111111111", -1, errors.New("contains non-digit: 'x'"))
 	assertChecksum(t, ChecksumEan13, "9781934356739", 9, nil)
 	assertChecksum(t, ChecksumEan13, "1111111111116", 6, nil)

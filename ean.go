@@ -42,7 +42,7 @@ func ChecksumUpc(upc string) (int, error) {
 
 func checksum(ean string, size int) (int, error) {
 	if len(ean) != size {
-		return -1, fmt.Errorf("ean %v is too short to compute a checksum", ean)
+		return -1, fmt.Errorf("incorrect ean %v to compute a checksum", ean)
 	}
 
 	code := ean[:size-1]
