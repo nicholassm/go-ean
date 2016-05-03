@@ -1,7 +1,7 @@
 go-ean
 ======
 
-go-ean is a simple utility library for calculating EAN checksums and validating EAN-8 and EAN-13 numbers.
+go-ean is a simple utility library for calculating EAN checksums and validating EAN-8, EAN-13 and UPC numbers.
 
 ## Installation
 
@@ -9,13 +9,16 @@ go-ean is a simple utility library for calculating EAN checksums and validating 
 
 ## Usage
 
-To calculate a checksum use the `ChecksumEan8` or `ChecksumEan13` functions:
+To calculate a checksum use the `ChecksumEan8`, `ChecksumEan13` or `ChecksumUpc` functions:
 
     package main
 
     import "github.com/nicholassm/go-ean/ean"
 
     func main() {
+      c, err := ean.ChecksumUpc("012345678905")
+      println(c)  // Prints 5
+
       c, err := ean.ChecksumEan13("629104150021")
       println(c)  // Prints 3
 
@@ -23,7 +26,7 @@ To calculate a checksum use the `ChecksumEan8` or `ChecksumEan13` functions:
       println(c2) // Prints 7
     }
 
-To check the validity of a string as EAN-8 or EAN-13 use `Valid`:
+To check the validity of a string as EAN-8, EAN-13 or UPC use `Valid`:
 
     println(ean.Valid("96385074")) // Prints true
     println(ean.Valid("abc"))      // Prints false
